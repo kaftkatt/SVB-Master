@@ -24,12 +24,12 @@ from math import radians, cos
 dirn = '/home/athelandersson/NETCDFs/smooth_NO/'
 dirw = '/home/athelandersson/NETCDFs/smooth/'
 
-dsw, dsn = SVBfunc.loadNetCDFs(dirw, dirn, 'dynVars')
+dsw, dsn = SVBfunc.loadNetCDFs(dirw, dirn, 'dynVars',1)
 
 dirnOrg = '/home/athelandersson/NETCDFs/original_NO/'
 dirwOrg = '/home/athelandersson/NETCDFs/original/'
 
-dswOrg, dsnOrg = SVBfunc.loadNetCDFs(dirwOrg, dirnOrg, 'dynVars')
+dswOrg, dsnOrg = SVBfunc.loadNetCDFs(dirwOrg, dirnOrg, 'dynVars',2)
 
 
 
@@ -43,8 +43,8 @@ def animate(t):
     print(t)
     WOrg = SVBfunc.get_snapshot_at_level( torg,dep,dswOrg,dsnOrg)
     WSm = SVBfunc.get_snapshot_at_level( tsm,dep,dsw,dsn)
-    W=WOrg-Wsm
-
+    W=WSm-WOrg
+    
     cax.set_array(np.ma.masked_array(W,mask=maskw[dep,:,:]))
     ax.set_title(f'At depth {Z[dep].values:.2f} m. After {tt:.1f} hours')
 
@@ -75,13 +75,13 @@ t=0
 tt=(((72*ind+t)*20)+2880)/60 # Gives amount of hours from start of the model, starts at hour 48 if ind=0 and t=0
 
 torg=t
-tsm=t+72
+tsm=t+71
 indSm=ind+1
 indOrg=ind
 
 Ww=dsw[indSm].WVEL
 Wn=dsn[indSm].WVEL
-Win=Ww[tsm,dep,:,:]-Wn[tsm,dep,:,:]
+WinSm=Ww[tsm,dep,:,:]-Wn[tsm,dep,:,:]
 
 WwOrg=dswOrg[indOrg].WVEL
 WnOrg=dsnOrg[indOrg].WVEL
